@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>فرصة أخيرة</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap');
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Cairo', sans-serif;
+      background: #0a0a0a;
+      color: #e0e0e0;
+      min-height: 100vh;
+      overflow-x: hidden;
+      direction: rtl;
+    }
+    
+    /* Rain effect */
+    .rain {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+    }
+    
+    .drop {
+      position: absolute;
+      bottom: 100%;
+      width: 1px;
+      height: 40px;
+      background: linear-gradient(to bottom, transparent, rgba(174, 194, 224, 0.4));
+      animation: fall linear infinite;
+    }
+    
+    @keyframes fall {
+      to {
+        transform: translateY(100vh);
+      }
+    }
+    
+    /* Screens */
+    .screen {
+      display: none;
+      min-height: 100vh;
+      position: relative;
+      z-index: 10;
+      padding: 20px;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .screen.active {
+      display: flex;
+    }
+    
+    /* Password Screen */
+    #password-screen {
+      background: radial-gradient(ellipse at center, #1a1a2e 0%, #0a0a0a 70%);
+    }
+    
+    .lock-container {
+      text-align: center;
+      max-width: 360px;
+      width: 100%;
+      background: rgba(20, 20, 30, 0.85);
+      border: 1px solid rgba(100, 100, 120, 0.3);
+      border-radius: 20px;
+      padding: 40px 30px;
+      box-shadow: 0 0 40px rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(10px);
+    }
+    
+    .lock-icon {
+      font-size: 48px;
+      margin-bottom: 15px;
+      opacity: 0.7;
+    }
+    
+    .lock-title {
+      font-size: 22px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: #c0c0d0;
+    }
+    
+    .lock-sub {
+      font-size: 14px;
+      color: #888;
+      margin-bottom: 30px;
+    }
+    
+    #password-input {
+      width: 100%;
+      padding: 14px 18px;
+      font-size: 18px;
+      font-family: 'Cairo', sans-serif;
+      background: rgba(0, 0, 0, 0.5);
+      border: 1px solid rgba(120, 120, 140, 0.4);
+      border-radius: 12px;
+      color: #fff;
+      text-align: center;
+      outline: none;
+      transition: border-color 0.3s;
+      direction: ltr;
+    }
+    
+    #password-input:focus {
+      border-color: #6a6a8a;
+    }
+    
+    #password-input::placeholder {
+      color: #555;
+    }
+    
+    .unlock-btn {
+      width: 100%;
+      margin-top: 18px;
+      padding: 14px;
+      font-size: 16px;
+      font-family: 'Cairo', sans-serif;
+      font-weight: 600;
+      background: linear-gradient(135deg, #2a2a3e, #1a1a2a);
+      border: 1px solid rgba(100, 100, 130, 0.4);
+      border-radius: 12px;
+      color: #ccc;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    
+    .unlock-btn:hover {
+      background: linear-gradient(135deg, #3a3a4e, #2a2a3a);
+      color: #fff;
+    }
+    
+    .error-msg {
+      color: #c44;
+      font-size: 13px;
+      margin-top: 12px;
+      min-height: 20px;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    
+    .error-msg.show {
+      opacity: 1;
+    }
+    
+    /* Message Screen */
+    #message-screen {
+      background: radial-gradient(ellipse at center, #12121f 0%, #0a0a0a 70%);
+    }
+    
+    .message-box {
+      max-width: 480px;
+      width: 100%;
+      background: rgba(18, 18, 28, 0.9);
+      border: 1px solid rgba(80, 80, 100, 0.3);
+      border-radius: 20px;
+      padding: 40px 30px;
+      text-align: center;
+      box-shadow: 0 0 50px rgba(0, 0, 0, 0.7);
+    }
+    
+    .message-emoji {
+      font-size: 40px;
+      margin-bottom: 20px;
+    }
+    
+    .message-text {
+      font-size: 18px;
+      line-height: 1.9;
+      color: #d0d0d8;
+      margin-bottom: 30px;
+      font-weight: 400;
+    }
+    
+    .next-btn {
+      padding: 12px 40px;
+      font-size: 16px;
+      font-family: 'Cairo', sans-serif;
+      font-weight: 600;
+      background: linear-gradient(135deg, #2a2a3e, #1a1a2a);
+      border: 1px solid rgba(100, 100, 130, 0.5);
+      border-radius: 30px;
+      color: #ccc;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    
+    .next-btn:hover {
+      background: linear-gradient(135deg, #3a3a5e, #2a2a4a);
+      color: #fff;
+      transform: scale(1.03);
+    }
+    
+    /* Gallery Screen */
+    #gallery-screen {
+      background: #0a0a0a;
+      justify-content: flex-start;
+      padding-top: 40px;
+      padding-bottom: 80px;
+    }
+    
+    .gallery-title {
+      font-size: 24px;
+      margin-bottom: 10px;
+      color: #c0c0d0;
+      text-align: center;
+    }
+    
+    .gallery-sub {
+      font-size: 14px;
+      color: #777;
+      margin-bottom: 30px;
+      text-align: center;
+    }
+    
+    .photos-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+      max-width: 900px;
+      width: 100%;
+      padding: 0 10px;
+    }
+    
+    .photo-card {
+      position: relative;
+      border-radius: 16px;
+      overflow: hidden;
+      background: #111;
+      border: 1px solid rgba(80, 80, 100, 0.3);
+      aspect-ratio: 3/4;
+    }
+    
+    .photo-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.4s;
+    }
+    
+    .photo-card:hover img {
+      transform: scale(1.04);
+    }
+    
+    .final-message {
+      margin-top: 40px;
+      text-align: center;
+      max-width: 500px;
+      padding: 0 20px;
+    }
+    
+    .final-message p {
+      font-size: 16px;
+      line-height: 1.8;
+      color: #aaa;
+      margin-bottom: 20px;
+    }
+    
+    .heart {
+      color: #a66;
+      font-size: 22px;
+    }
+    
+    /* Audio controls */
+    .audio-hint {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(20, 20, 30, 0.9);
+      padding: 8px 18px;
+      border-radius: 20px;
+      font-size: 12px;
+      color: #888;
+      z-index: 100;
+      border: 1px solid rgba(80, 80, 100, 0.3);
+      display: none;
+    }
+    
+    .audio-hint.show {
+      display: block;
+    }
+    
+    /* Fade transitions */
+    .fade-in {
+      animation: fadeIn 0.8s ease forwards;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(15px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <!-- Rain effect container -->
+  <div class="rain" id="rain"></div>
+  
+  <!-- Password Screen -->
+  <div class="screen active" id="password-screen">
+    <div class="lock-container fade-in">
+      <div class="lock-icon">🔒</div>
+      <div class="lock-title">مقفول</div>
+      <div class="lock-sub">أدخلي الباسورد عشان تشوفي</div>
+      <input type="text" id="password-input" placeholder="_____" autocomplete="off" maxlength="12">
+      <button class="unlock-btn" onclick="checkPassword()">فتح</button>
+      <div class="error-msg" id="error-msg">الباسورد غلط</div>
+    </div>
+  </div>
+  
+  <!-- Message Screen -->
+  <div class="screen" id="message-screen">
+    <div class="message-box fade-in">
+      <div class="message-emoji">💔</div>
+      <div class="message-text">
+        ولا قدرتيني ولا حبيتيني زي محبيتك<br>
+        ولا سمعتي كلامي<br><br>
+        بس دي ممكن تبقى فرصة أخيرة لينا<br>
+        إننا نسمع بعض وتسمعي اللي هقوله<br>
+        وترجعي حبيبتي لو حابة
+      </div>
+      <button class="next-btn" onclick="showGallery()">كمل ←</button>
+    </div>
+  </div>
+  
+  <!-- Gallery Screen -->
+  <div class="screen" id="gallery-screen">
+    <div class="gallery-title fade-in">ذكرياتنا</div>
+    <div class="gallery-sub">كل صورة ليها حكاية</div>
+    
+    <div class="photos-grid">
+      <div class="photo-card">
+        <img src="1000117136.jpg" alt="صورة 1">
+      </div>
+      <div class="photo-card">
+        <img src="1000068007.jpg" alt="صورة 2">
+      </div>
+      <div class="photo-card">
+        <img src="1000051878.jpg" alt="صورة 3">
+      </div>
+      <div class="photo-card">
+        <img src="1000067982.jpg" alt="صورة 4">
+      </div>
+      <div class="photo-card">
+        <img src="1000051884.jpg" alt="صورة 5">
+      </div>
+      <div class="photo-card">
+        <img src="1000051876.jpg" alt="صورة 6">
+      </div>
+    </div>
+    
+    <div class="final-message fade-in">
+      <p>الأغنية شغالة في الخلفية...<br>لو حابة نرجع، الباب مفتوح.</p>
+      <div class="heart">♥</div>
+    </div>
+  </div>
+  
+  <div class="audio-hint" id="audio-hint">اضغطي في أي مكان لو الصوت مش شغال</div>
+  
+  <audio id="bg-music" loop>
+    <source src="song.mp3" type="audio/mpeg">
+  </audio>
+  
+  <script>
+    // Create rain drops
+    const rain = document.getElementById('rain');
+    for (let i = 0; i < 80; i++) {
+      const drop = document.createElement('div');
+      drop.className = 'drop';
+      drop.style.left = Math.random() * 100 + '%';
+      drop.style.animationDuration = (0.6 + Math.random() * 0.9) + 's';
+      drop.style.animationDelay = Math.random() * 3 + 's';
+      drop.style.opacity = 0.3 + Math.random() * 0.5;
+      rain.appendChild(drop);
+    }
+    
+    const correctPassword = 'b+s-28/1';
+    const music = document.getElementById('bg-music');
+    let musicStarted = false;
+    
+    function checkPassword() {
+      const input = document.getElementById('password-input');
+      const error = document.getElementById('error-msg');
+      const val = input.value.trim();
+      
+      if (val === correctPassword) {
+        error.classList.remove('show');
+        // Switch screens
+        document.getElementById('password-screen').classList.remove('active');
+        document.getElementById('message-screen').classList.add('active');
+        
+        // Start music
+        music.volume = 0.6;
+        music.play().then(() => {
+          musicStarted = true;
+        }).catch(() => {
+          document.getElementById('audio-hint').classList.add('show');
+        });
+      } else {
+        error.classList.add('show');
+        input.value = '';
+        input.focus();
+        // Shake effect
+        input.style.borderColor = '#c44';
+        setTimeout(() => input.style.borderColor = '', 600);
+      }
+    }
+    
+    // Enter key
+    document.getElementById('password-input').addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') checkPassword();
+    });
+    
+    function showGallery() {
+      document.getElementById('message-screen').classList.remove('active');
+      document.getElementById('gallery-screen').classList.add('active');
+      // Stop rain on gallery for cleaner look (optional)
+      // rain.style.display = 'none';
+    }
+    
+    // Click anywhere to start audio if blocked
+    document.body.addEventListener('click', function() {
+      if (!musicStarted && document.getElementById('message-screen').classList.contains('active') || 
+          document.getElementById('gallery-screen').classList.contains('active')) {
+        music.play().then(() => {
+          musicStarted = true;
+          document.getElementById('audio-hint').classList.remove('show');
+        }).catch(() => {});
+      }
+    });
+    
+    // Focus input on load
+    window.onload = () => {
+      document.getElementById('password-input').focus();
+    };
+  </script>
+</body>
+</html>
