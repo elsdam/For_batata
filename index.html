@@ -22,8 +22,8 @@
       direction: rtl;
     }
     
-    /* Rain effect */
-    .rain {
+    /* Floating hearts background */
+    .hearts {
       position: fixed;
       top: 0;
       left: 0;
@@ -31,20 +31,29 @@
       height: 100%;
       pointer-events: none;
       z-index: 1;
+      overflow: hidden;
     }
     
-    .drop {
+    .heart {
       position: absolute;
-      bottom: 100%;
-      width: 1px;
-      height: 40px;
-      background: linear-gradient(to bottom, transparent, rgba(174, 194, 224, 0.4));
-      animation: fall linear infinite;
+      bottom: -50px;
+      font-size: 18px;
+      color: rgba(180, 80, 100, 0.35);
+      animation: floatUp linear infinite;
+      user-select: none;
     }
     
-    @keyframes fall {
-      to {
-        transform: translateY(100vh);
+    @keyframes floatUp {
+      0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 0.4;
+      }
+      50% {
+        opacity: 0.7;
+      }
+      100% {
+        transform: translateY(-110vh) rotate(360deg);
+        opacity: 0;
       }
     }
     
@@ -164,8 +173,8 @@
     .message-box {
       max-width: 480px;
       width: 100%;
-      background: rgba(18, 18, 28, 0.9);
-      border: 1px solid rgba(80, 80, 100, 0.3);
+      background: rgba(30, 25, 40, 0.95);
+      border: 1px solid rgba(140, 100, 120, 0.35);
       border-radius: 20px;
       padding: 40px 30px;
       text-align: center;
@@ -180,7 +189,7 @@
     .message-text {
       font-size: 18px;
       line-height: 1.9;
-      color: #d0d0d8;
+      color: #f0e8ec;
       margin-bottom: 30px;
       font-weight: 400;
     }
@@ -204,17 +213,93 @@
       transform: scale(1.03);
     }
     
-    /* Gallery Screen */
-    #gallery-screen {
+    /* Timer + Gallery Screen */
+    #main-screen {
       background: #0a0a0a;
       justify-content: flex-start;
-      padding-top: 40px;
-      padding-bottom: 80px;
+      padding-top: 30px;
+      padding-bottom: 100px;
     }
     
+    /* Timer Section */
+    .timer-section {
+      position: relative;
+      width: 100%;
+      max-width: 420px;
+      border-radius: 20px;
+      overflow: hidden;
+      margin-bottom: 40px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+    }
+    
+    .timer-bg {
+      width: 100%;
+      height: 280px;
+      object-fit: cover;
+      display: block;
+      filter: brightness(0.72);
+    }
+    
+    .timer-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.25), rgba(0,0,0,0.55));
+      text-align: center;
+      padding: 20px;
+    }
+    
+    .timer-title {
+      font-size: 20px;
+      color: #f0c0c8;
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+    
+    .timer-subtitle {
+      font-size: 15px;
+      color: #ddd;
+      margin-bottom: 18px;
+    }
+    
+    .timer-numbers {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    
+    .timer-box {
+      background: rgba(0,0,0,0.55);
+      border: 1px solid rgba(200,120,140,0.3);
+      border-radius: 12px;
+      padding: 10px 12px;
+      min-width: 70px;
+    }
+    
+    .timer-box .num {
+      font-size: 22px;
+      font-weight: 700;
+      color: #fff;
+      display: block;
+    }
+    
+    .timer-box .label {
+      font-size: 11px;
+      color: #bbb;
+      margin-top: 2px;
+    }
+    
+    /* Gallery */
     .gallery-title {
-      font-size: 24px;
-      margin-bottom: 10px;
+      font-size: 22px;
+      margin-bottom: 8px;
       color: #c0c0d0;
       text-align: center;
     }
@@ -222,80 +307,97 @@
     .gallery-sub {
       font-size: 14px;
       color: #777;
-      margin-bottom: 30px;
+      margin-bottom: 25px;
       text-align: center;
     }
     
     .photos-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 16px;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 20px;
       max-width: 900px;
       width: 100%;
       padding: 0 10px;
     }
     
     .photo-card {
-      position: relative;
+      background: rgba(20,20,30,0.8);
+      border: 1px solid rgba(80, 80, 100, 0.3);
       border-radius: 16px;
       overflow: hidden;
-      background: #111;
-      border: 1px solid rgba(80, 80, 100, 0.3);
-      aspect-ratio: 3/4;
+      text-align: center;
     }
     
     .photo-card img {
       width: 100%;
-      height: 100%;
+      height: 320px;
       object-fit: cover;
       display: block;
-      transition: transform 0.4s;
     }
     
-    .photo-card:hover img {
-      transform: scale(1.04);
+    .photo-caption {
+      padding: 14px 12px;
     }
     
-    .final-message {
-      margin-top: 40px;
-      text-align: center;
-      max-width: 500px;
-      padding: 0 20px;
-    }
-    
-    .final-message p {
+    .photo-caption .main {
       font-size: 16px;
-      line-height: 1.8;
+      color: #e0c0c8;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    
+    .photo-caption .sub {
+      font-size: 14px;
       color: #aaa;
-      margin-bottom: 20px;
     }
     
-    .heart {
-      color: #a66;
-      font-size: 22px;
-    }
-    
-    /* Audio controls */
-    .audio-hint {
+    /* Music control */
+    .music-control {
       position: fixed;
-      bottom: 20px;
+      bottom: 25px;
       left: 50%;
       transform: translateX(-50%);
-      background: rgba(20, 20, 30, 0.9);
-      padding: 8px 18px;
-      border-radius: 20px;
-      font-size: 12px;
-      color: #888;
       z-index: 100;
-      border: 1px solid rgba(80, 80, 100, 0.3);
       display: none;
+      align-items: center;
+      gap: 12px;
+      background: rgba(20, 20, 30, 0.92);
+      border: 1px solid rgba(100, 100, 130, 0.4);
+      border-radius: 50px;
+      padding: 10px 22px;
+      box-shadow: 0 5px 25px rgba(0,0,0,0.5);
+      backdrop-filter: blur(8px);
     }
     
-    .audio-hint.show {
-      display: block;
+    .music-control.show {
+      display: flex;
     }
     
-    /* Fade transitions */
+    .music-btn {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      border: none;
+      background: linear-gradient(135deg, #3a2a3e, #2a1a2a);
+      color: #f0c0c8;
+      font-size: 18px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+    
+    .music-btn:hover {
+      transform: scale(1.08);
+    }
+    
+    .music-label {
+      font-size: 13px;
+      color: #bbb;
+    }
+    
+    /* Fade */
     .fade-in {
       animation: fadeIn 0.8s ease forwards;
     }
@@ -307,8 +409,8 @@
   </style>
 </head>
 <body>
-  <!-- Rain effect container -->
-  <div class="rain" id="rain"></div>
+  <!-- Floating hearts -->
+  <div class="hearts" id="hearts"></div>
   
   <!-- Password Screen -->
   <div class="screen active" id="password-screen">
@@ -333,64 +435,111 @@
         إننا نسمع بعض وتسمعي اللي هقوله<br>
         وترجعي حبيبتي لو حابة
       </div>
-      <button class="next-btn" onclick="showGallery()">كمل ←</button>
+      <button class="next-btn" onclick="showMain()">كمل ←</button>
     </div>
   </div>
   
-  <!-- Gallery Screen -->
-  <div class="screen" id="gallery-screen">
-    <div class="gallery-title fade-in">ذكرياتنا</div>
+  <!-- Main Screen (Timer + Gallery) -->
+  <div class="screen" id="main-screen">
+    
+    <!-- Timer with holding hands photo as background -->
+    <div class="timer-section fade-in">
+      <img src="1000051884.jpg" alt="ايدينا" class="timer-bg">
+      <div class="timer-overlay">
+        <div class="timer-title">لسه سوا</div>
+        <div class="timer-subtitle">من 5 سنين... ولسه مكملين</div>
+        <div class="timer-numbers" id="timer">
+          <div class="timer-box">
+            <span class="num" id="years">0</span>
+            <span class="label">سنة</span>
+          </div>
+          <div class="timer-box">
+            <span class="num" id="days">0</span>
+            <span class="label">يوم</span>
+          </div>
+          <div class="timer-box">
+            <span class="num" id="hours">0</span>
+            <span class="label">ساعة</span>
+          </div>
+          <div class="timer-box">
+            <span class="num" id="mins">0</span>
+            <span class="label">دقيقة</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="gallery-title">ذكرياتنا</div>
     <div class="gallery-sub">كل صورة ليها حكاية</div>
     
     <div class="photos-grid">
       <div class="photo-card">
-        <img src="1000117136.jpg" alt="صورة 1">
+        <img src="1000117136.jpg" alt="صورة">
+        <div class="photo-caption">
+          <div class="main">دي النونه بتاعتي</div>
+          <div class="sub">وحشتيني</div>
+        </div>
       </div>
       <div class="photo-card">
-        <img src="1000068007.jpg" alt="صورة 2">
+        <img src="1000068007.jpg" alt="صورة">
+        <div class="photo-caption">
+          <div class="main">دي النونه بتاعتي</div>
+          <div class="sub">وحشتيني</div>
+        </div>
       </div>
       <div class="photo-card">
-        <img src="1000051878.jpg" alt="صورة 3">
+        <img src="1000051878.jpg" alt="صورة">
+        <div class="photo-caption">
+          <div class="main">دي النونه بتاعتي</div>
+          <div class="sub">وحشتيني</div>
+        </div>
       </div>
       <div class="photo-card">
-        <img src="1000067982.jpg" alt="صورة 4">
+        <img src="1000067982.jpg" alt="صورة">
+        <div class="photo-caption">
+          <div class="main">دي النونه بتاعتي</div>
+          <div class="sub">وحشتيني</div>
+        </div>
       </div>
       <div class="photo-card">
-        <img src="1000051884.jpg" alt="صورة 5">
+        <img src="1000051876.jpg" alt="صورة">
+        <div class="photo-caption">
+          <div class="main">دي النونه بتاعتي</div>
+          <div class="sub">وحشتيني</div>
+        </div>
       </div>
-      <div class="photo-card">
-        <img src="1000051876.jpg" alt="صورة 6">
-      </div>
-    </div>
-    
-    <div class="final-message fade-in">
-      <p>الأغنية شغالة في الخلفية...<br>لو حابة نرجع، الباب مفتوح.</p>
-      <div class="heart">♥</div>
     </div>
   </div>
   
-  <div class="audio-hint" id="audio-hint">اضغطي في أي مكان لو الصوت مش شغال</div>
+  <!-- Music Control -->
+  <div class="music-control" id="music-control">
+    <button class="music-btn" id="music-btn" onclick="toggleMusic()">▶</button>
+    <span class="music-label" id="music-label">تشغيل الأغنية</span>
+  </div>
   
   <audio id="bg-music" loop>
     <source src="song.mp3" type="audio/mpeg">
   </audio>
   
   <script>
-    // Create rain drops
-    const rain = document.getElementById('rain');
-    for (let i = 0; i < 80; i++) {
-      const drop = document.createElement('div');
-      drop.className = 'drop';
-      drop.style.left = Math.random() * 100 + '%';
-      drop.style.animationDuration = (0.6 + Math.random() * 0.9) + 's';
-      drop.style.animationDelay = Math.random() * 3 + 's';
-      drop.style.opacity = 0.3 + Math.random() * 0.5;
-      rain.appendChild(drop);
+    // Create floating hearts
+    const heartsContainer = document.getElementById('hearts');
+    const heartSymbols = ['♥', '♡', '❤', '💕', '💗'];
+    
+    for (let i = 0; i < 35; i++) {
+      const heart = document.createElement('div');
+      heart.className = 'heart';
+      heart.textContent = heartSymbols[Math.floor(Math.random() * heartSymbols.length)];
+      heart.style.left = Math.random() * 100 + '%';
+      heart.style.fontSize = (14 + Math.random() * 18) + 'px';
+      heart.style.animationDuration = (8 + Math.random() * 12) + 's';
+      heart.style.animationDelay = Math.random() * 10 + 's';
+      heartsContainer.appendChild(heart);
     }
     
     const correctPassword = 'b+s-28/1';
     const music = document.getElementById('bg-music');
-    let musicStarted = false;
+    let isPlaying = false;
     
     function checkPassword() {
       const input = document.getElementById('password-input');
@@ -399,51 +548,96 @@
       
       if (val === correctPassword) {
         error.classList.remove('show');
-        // Switch screens
         document.getElementById('password-screen').classList.remove('active');
         document.getElementById('message-screen').classList.add('active');
         
-        // Start music
-        music.volume = 0.6;
+        // Try to start music
+        music.volume = 0.55;
         music.play().then(() => {
-          musicStarted = true;
-        }).catch(() => {
-          document.getElementById('audio-hint').classList.add('show');
-        });
+          isPlaying = true;
+          updateMusicUI();
+        }).catch(() => {});
+        
+        document.getElementById('music-control').classList.add('show');
       } else {
         error.classList.add('show');
         input.value = '';
         input.focus();
-        // Shake effect
         input.style.borderColor = '#c44';
         setTimeout(() => input.style.borderColor = '', 600);
       }
     }
     
-    // Enter key
     document.getElementById('password-input').addEventListener('keypress', function(e) {
       if (e.key === 'Enter') checkPassword();
     });
     
-    function showGallery() {
+    function showMain() {
       document.getElementById('message-screen').classList.remove('active');
-      document.getElementById('gallery-screen').classList.add('active');
-      // Stop rain on gallery for cleaner look (optional)
-      // rain.style.display = 'none';
+      document.getElementById('main-screen').classList.add('active');
+      startTimer();
     }
     
-    // Click anywhere to start audio if blocked
-    document.body.addEventListener('click', function() {
-      if (!musicStarted && document.getElementById('message-screen').classList.contains('active') || 
-          document.getElementById('gallery-screen').classList.contains('active')) {
+    function toggleMusic() {
+      if (isPlaying) {
+        music.pause();
+        isPlaying = false;
+      } else {
         music.play().then(() => {
-          musicStarted = true;
-          document.getElementById('audio-hint').classList.remove('show');
+          isPlaying = true;
+        }).catch(() => {});
+      }
+      updateMusicUI();
+    }
+    
+    function updateMusicUI() {
+      const btn = document.getElementById('music-btn');
+      const label = document.getElementById('music-label');
+      if (isPlaying) {
+        btn.textContent = '⏸';
+        label.textContent = 'إيقاف الأغنية';
+      } else {
+        btn.textContent = '▶';
+        label.textContent = 'تشغيل الأغنية';
+      }
+    }
+    
+    // Timer - counting from 5 years ago
+    function startTimer() {
+      // Start date: exactly 5 years ago from now
+      const startDate = new Date();
+      startDate.setFullYear(startDate.getFullYear() - 5);
+      
+      function update() {
+        const now = new Date();
+        const diff = now - startDate;
+        
+        const years = Math.floor(diff / (1000 * 60 * 60 * 24 * 365.25));
+        const days = Math.floor((diff % (1000 * 60 * 60 * 24 * 365.25)) / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        
+        document.getElementById('years').textContent = years;
+        document.getElementById('days').textContent = days;
+        document.getElementById('hours').textContent = hours;
+        document.getElementById('mins').textContent = mins;
+      }
+      
+      update();
+      setInterval(update, 1000);
+    }
+    
+    // Click anywhere to help unlock audio
+    document.body.addEventListener('click', function() {
+      if (!isPlaying && (document.getElementById('message-screen').classList.contains('active') || 
+          document.getElementById('main-screen').classList.contains('active'))) {
+        music.play().then(() => {
+          isPlaying = true;
+          updateMusicUI();
         }).catch(() => {});
       }
     });
     
-    // Focus input on load
     window.onload = () => {
       document.getElementById('password-input').focus();
     };
